@@ -12,6 +12,6 @@ interface ApiInterface {
     @POST(Constants.LOGIN_URL)
     fun login(@Body request: Login): Call<LoginResponse>
 
-    @GET(Constants.NEWS_URL)
+    @GET(Constants.NEWS_LIST_URL)
     fun getNews(): Call<News>
 }
