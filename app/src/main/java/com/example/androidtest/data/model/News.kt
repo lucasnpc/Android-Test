@@ -13,10 +13,14 @@ data class News (
     var linha_fina: String,
     @SerializedName("data_hora_publicacao")
     var publi: String,
+    @SerializedName("credito")
+    var credito: String,
     @SerializedName("url")
     var url: String,
     @SerializedName("imagem")
-    var imagen: String,
+    var imagem: String,
+    @SerializedName("imagem_credito")
+    var imagem_credito: String,
     @SerializedName("source")
     var source: String
 )

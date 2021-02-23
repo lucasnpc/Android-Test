@@ -16,6 +16,7 @@ class NewsListViewModel(private val newsListRepository: NewsListRepository) : Vi
     val newsListResult: LiveData<NewsListResult> = _newsListResult
 
     fun getNews(token: String) {
+        _newsListState.value = NewsListState(isLoading = true)
         newsListRepository.getNews(token, _newsListResult, _newsListState)
     }
 }
