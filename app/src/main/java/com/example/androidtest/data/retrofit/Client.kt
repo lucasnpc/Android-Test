@@ -5,7 +5,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class Retrofit {
+class Client {
 
     fun getApi(): ApiInterface {
         val retrofit = Retrofit.Builder().baseUrl(Constants.BASE_URL)

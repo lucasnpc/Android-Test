@@ -13,5 +13,5 @@ interface ApiInterface {
     fun login(@Body request: Login): Call<LoginResponse>
 
     @GET(Constants.NEWS_LIST_URL)
-    fun getNews(): Call<News>
+    fun getNews(@Header("Authorization") token: String): Call<ArrayList<News>>
 }

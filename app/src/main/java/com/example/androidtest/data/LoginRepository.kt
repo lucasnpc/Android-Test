@@ -5,8 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.androidtest.R
 import com.example.androidtest.data.model.Login
 import com.example.androidtest.data.response.LoginResponse
-import com.example.androidtest.data.retrofit.Retrofit
-import com.example.androidtest.ui.login.LoggedInUserView
+import com.example.androidtest.data.retrofit.Client
 import com.example.androidtest.ui.login.LoginFormState
 import com.example.androidtest.ui.login.LoginResult
 import retrofit2.Call
@@ -28,15 +27,22 @@ class LoginRepository {
         _loginResult: MutableLiveData<LoginResult>,
         _loginState: MutableLiveData<LoginFormState>
     ) =
-        Retrofit().getApi().login(Login(username, password))
+        Client().getApi().login(Login(username, password))
             .enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(
                     call: Call<LoginResponse>,
                     response: Response<LoginResponse>
                 ) {
-                    Log.e("Response", response.code().toString())
+                    Log.e("Code", response.code().toString())
+                    if (response.code() != 200) {
+                        _loginResult.value =
+                            LoginResult(error = R.string.login_failed)
+                        _loginState.value = LoginFormState(isLoading = false)
+                        return
+                    }
+                    Log.e("Token", response.body()?.token.toString())
                     _loginResult.value =
-                        LoginResult(success = LoggedInUserView(displayName = username))
+                        LoginResult(success = true, token = response.body()?.token.toString())
                     _loginState.value = LoginFormState(isLoading = false)
                 }
 

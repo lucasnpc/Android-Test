@@ -1,6 +1,7 @@
 package com.example.androidtest.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,20 +9,12 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 
 import com.example.androidtest.R
-import com.example.androidtest.data.model.News
-import com.example.androidtest.data.retrofit.Retrofit
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.androidtest.ui.newsList.NewsListActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -32,13 +25,16 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.title = ""
+
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
-        val loading = findViewById<ProgressBar>(R.id.loading)
+        val loading = findViewById<ProgressBar>(R.id.loading_login)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-                .get(LoginViewModel::class.java)
+            .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -53,8 +49,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.passwordError != null) {
                 password.error = getString(loginState.passwordError)
             }
-            if (loginState.isLoading)
-            {
+            if (loginState.isLoading) {
                 username.isEnabled = false
                 password.isEnabled = false
                 login.isEnabled = false
@@ -68,26 +63,24 @@ class LoginActivity : AppCompatActivity() {
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
+            if (loginResult.success == true) {
+                updateUiWithUser(loginResult.token)
             }
             setResult(Activity.RESULT_OK)
-
-            //finish()
         })
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
+                username.text.toString(),
+                password.text.toString()
             )
         }
 
         password.apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                        username.text.toString(),
-                        password.text.toString()
+                    username.text.toString(),
+                    password.text.toString()
                 )
             }
 
@@ -95,8 +88,8 @@ class LoginActivity : AppCompatActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                                username.text.toString(),
-                                password.text.toString()
+                            username.text.toString(),
+                            password.text.toString()
                         )
                 }
                 false
@@ -109,14 +102,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        Toast.makeText(
-                applicationContext,
-                "$welcome $displayName",
-                Toast.LENGTH_LONG
-        ).show()
+    private fun updateUiWithUser(token: String) {
+        //TODO Update UI When Logging is Successfull
+        startActivity(Intent(this, NewsListActivity::class.java).putExtra("Token", token))
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
