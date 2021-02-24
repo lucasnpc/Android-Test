@@ -26,6 +26,7 @@ class NewsInfoRepository {
                     if (response.code() != 201) {
                         _newsInfoState.value = NewsInfoState(isLoading = false)
                         _newsInfoResult.value = NewsInfoResult(failed = true)
+                        return
                     }
                     _newsInfoState.value = NewsInfoState(isLoading = false)
                     _newsInfoResult.value =
@@ -38,7 +39,6 @@ class NewsInfoRepository {
                     _newsInfoResult.value = NewsInfoResult(failed = true)
                     Log.e("Error", t.message.toString())
                 }
-
             })
 
 }
