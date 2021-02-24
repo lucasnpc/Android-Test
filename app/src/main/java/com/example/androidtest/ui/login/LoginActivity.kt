@@ -61,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
 
             loading.visibility = View.GONE
             if (loginResult.error != null) {
+                login.isEnabled = true
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success == true) {

@@ -1,5 +1,6 @@
 package com.example.androidtest.ui.newsList
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -20,7 +21,7 @@ class NewsListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_list)
 
-        val _token = intent.getStringExtra("Token").toString()
+        val token = intent.getStringExtra("Token").toString()
         val loading = findViewById<ProgressBar>(R.id.loading_news_list)
         val reload = findViewById<Button>(R.id.reload)
         val requestFailedMessage = findViewById<TextView>(R.id.request_failed)
@@ -29,7 +30,7 @@ class NewsListActivity : AppCompatActivity() {
         newsListViewModel =
             ViewModelProvider(this, NewsListViewlModelFactory()).get(NewsListViewModel::class.java)
 
-        newsListViewModel.getNews(token = _token)
+        newsListViewModel.getNews(token = token)
 
         newsListViewModel.newsListState.observe(this@NewsListActivity, Observer {
             val newsListState = it ?: return@Observer
@@ -59,18 +60,19 @@ class NewsListActivity : AppCompatActivity() {
                 requestFailedMessage.visibility = View.GONE
                 if (newsListResult.news != null) {
                     recyclerNewsList.visibility = View.VISIBLE
-                    recyclerNewsList.apply { adapter = NewsListAdapter(newsListResult.news) }
+                    recyclerNewsList.apply {
+                        adapter = NewsListAdapter(newsListResult.news, this@NewsListActivity, token)
+                    }
                 }
             }
         })
 
         reload.setOnClickListener {
-            newsListViewModel.getNews(token = _token)
+            newsListViewModel.getNews(token = token)
         }
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        moveTaskToBack(true)
     }
 }
