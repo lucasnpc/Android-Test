@@ -8,6 +8,7 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Usuário inválido</string>
     <string name="invalid_password">Senha deve ser > que 5 caracteres</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="login_failed">Login failed</string>
+    <string name="user_or_pass_incorrect">Usuário e/ou Senha incorreto</string>
     <string name="request_failed">Request Failed, Click to try again</string>
 </resources>

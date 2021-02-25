@@ -36,7 +36,7 @@ class LoginRepository {
                     Log.e("Code", response.code().toString())
                     if (response.code() != 200) {
                         _loginResult.value =
-                            LoginResult(error = R.string.login_failed)
+                            LoginResult(error = R.string.user_or_pass_incorrect)
                         _loginState.value = LoginFormState(isLoading = false)
                         return
                     }

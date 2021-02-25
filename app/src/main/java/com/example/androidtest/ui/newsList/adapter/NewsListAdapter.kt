@@ -14,7 +14,11 @@ import com.example.androidtest.data.model.News
 import com.example.androidtest.ui.newsInfo.NewsInfoActivity
 import com.squareup.picasso.Picasso
 
-class NewsListAdapter(private val newsList: ArrayList<News>, private val context: Context, private val token: String) :
+class NewsListAdapter(
+    private val newsList: ArrayList<News>,
+    private val context: Context,
+    private val token: String
+) :
     RecyclerView.Adapter<NewsListAdapter.NewsViewHolder>() {
 
     class NewsViewHolder(@NonNull itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,14 +41,18 @@ class NewsListAdapter(private val newsList: ArrayList<News>, private val context
         holder.subtitle.text = news.linha_fina
 
         holder.itemView.setOnClickListener {
-            context.startActivity(
-                Intent(context, NewsInfoActivity::class.java).putExtra(
-                    "id",
-                    news.id_documento
-                ).putExtra("token", token)
-            )
+            updateUIWithNewsId(context, news.id_documento, token)
         }
     }
 
     override fun getItemCount() = newsList.size
+
+    private fun updateUIWithNewsId(ctx: Context, id: String, token: String) {
+        //TODO Update User Interface When the User Clicks on News
+
+        ctx.startActivity(
+            Intent(context, NewsInfoActivity::class.java).putExtra("id", id)
+                .putExtra("token", token)
+        )
+    }
 }

@@ -25,9 +25,6 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.title = ""
-
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
@@ -65,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success == true) {
-                updateUiWithUser(loginResult.token)
+                updateUiWithUserToken(loginResult.token)
             }
             setResult(Activity.RESULT_OK)
         })
@@ -103,7 +100,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUiWithUser(token: String) {
+    private fun updateUiWithUserToken(token: String) {
         //TODO Update UI When Logging is Successfull
         startActivity(Intent(this, NewsListActivity::class.java).putExtra("Token", token))
     }
