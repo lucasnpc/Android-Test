@@ -9,6 +9,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiInterface {
+
     @Headers("Content-type: application/json")
     @POST(Constants.LOGIN_URL)
     fun login(@Body request: Login): Call<LoginResponse>
@@ -17,8 +18,9 @@ interface ApiInterface {
     fun getNews(@Header("Authorization") token: String): Call<ArrayList<News>>
 
     @GET(Constants.NEWS_INFO_URL)
-    fun getDocument(
+    fun getNewsInfo(
         @Path("id") id: String,
         @Header("Authorization") token: String
     ): Call<ArrayList<NewsInfoResponse>>
+
 }

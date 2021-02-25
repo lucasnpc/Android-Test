@@ -14,13 +14,6 @@ import retrofit2.Response
 
 class LoginRepository {
 
-    var login: Login? = null
-        private set
-
-    init {
-        login = null
-    }
-
     fun login(
         username: String,
         password: String,

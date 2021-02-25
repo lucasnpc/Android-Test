@@ -14,6 +14,6 @@ class NewsInfoViewModel(private val newsInfoRepository: NewsInfoRepository): Vie
 
     fun getDocument(id: String, token: String){
         _documentState.value = NewsInfoState(isLoading = true)
-        newsInfoRepository.getDocument(id,token, _documentState, _documentResult)
+        newsInfoRepository.getNewsInfo(id,token, _documentState, _documentResult)
     }
 }

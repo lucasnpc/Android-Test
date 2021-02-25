@@ -11,13 +11,13 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class NewsInfoRepository {
-    fun getDocument(
+    fun getNewsInfo(
         id: String,
         token: String,
         _newsInfoState: MutableLiveData<NewsInfoState>,
         _newsInfoResult: MutableLiveData<NewsInfoResult>
     ) =
-        Client().getApi().getDocument(id = id, token = "Bearer $token")
+        Client().getApi().getNewsInfo(id = id, token = "Bearer $token")
             .enqueue(object : Callback<ArrayList<NewsInfoResponse>> {
                 override fun onResponse(
                     call: Call<ArrayList<NewsInfoResponse>>,
