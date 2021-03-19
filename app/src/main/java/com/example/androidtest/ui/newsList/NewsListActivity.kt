@@ -21,10 +21,6 @@ class NewsListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_news_list)
 
         val token = intent.getStringExtra("Token").toString()
-        val loading = findViewById<ProgressBar>(R.id.loading_news_list)
-        val reload = findViewById<Button>(R.id.reload)
-        val requestFailedMessage = findViewById<TextView>(R.id.request_failed_news_list)
-        val recyclerNewsList = findViewById<RecyclerView>(R.id.news_list)
 
         newsListViewModel =
             ViewModelProvider(this, NewsListViewlModelFactory()).get(NewsListViewModel::class.java)
@@ -36,12 +32,12 @@ class NewsListActivity : AppCompatActivity() {
 
             //TODO Get List of News
             if (!newsListState.isLoading) {
-                loading.visibility = View.GONE
+                findViewById<ProgressBar>(R.id.loading_news_list).visibility = View.GONE
             }
             if (newsListState.isLoading) {
-                reload.visibility = View.GONE
-                requestFailedMessage.visibility = View.GONE
-                loading.visibility = View.VISIBLE
+                findViewById<Button>(R.id.reload).visibility = View.GONE
+                findViewById<TextView>(R.id.request_failed_news_list).visibility = View.GONE
+                findViewById<ProgressBar>(R.id.loading_news_list).visibility = View.VISIBLE
             }
 
         })
@@ -51,22 +47,22 @@ class NewsListActivity : AppCompatActivity() {
 
             //TODO Get Request of News Result
             if (newsListResult.failed == true) {
-                reload.visibility = View.VISIBLE
-                requestFailedMessage.visibility = View.VISIBLE
+                findViewById<Button>(R.id.reload).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.request_failed_news_list).visibility = View.VISIBLE
             }
             if (newsListResult.success == true) {
-                reload.visibility = View.GONE
-                requestFailedMessage.visibility = View.GONE
+                findViewById<Button>(R.id.reload).visibility = View.GONE
+                findViewById<TextView>(R.id.request_failed_news_list).visibility = View.GONE
                 if (newsListResult.news != null) {
-                    recyclerNewsList.visibility = View.VISIBLE
-                    recyclerNewsList.apply {
+                    findViewById<RecyclerView>(R.id.news_list).apply {
+                        visibility = View.VISIBLE
                         adapter = NewsListAdapter(newsListResult.news, this@NewsListActivity, token)
                     }
                 }
             }
         })
 
-        reload.setOnClickListener {
+        findViewById<Button>(R.id.reload).setOnClickListener {
             newsListViewModel.getNews(token = token)
         }
     }

@@ -25,40 +25,37 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
-        val login = findViewById<Button>(R.id.login)
-        val loading = findViewById<ProgressBar>(R.id.loading_login)
-
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
+            val user = findViewById<EditText>(R.id.username)
+            val pass = findViewById<EditText>(R.id.password)
 
-            login.isEnabled = loginState.isDataValid
-            username.isEnabled = true
-            password.isEnabled = true
+            findViewById<Button>(R.id.login).isEnabled = loginState.isDataValid
+            user.isEnabled = true
+            pass.isEnabled = true
 
             if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
+                user.error = getString(loginState.usernameError)
             }
             if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
+                pass.error = getString(loginState.passwordError)
             }
             if (loginState.isLoading) {
-                username.isEnabled = false
-                password.isEnabled = false
-                login.isEnabled = false
+                user.isEnabled = false
+                pass.isEnabled = false
+                findViewById<Button>(R.id.login).isEnabled = false
             }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
+            findViewById<ProgressBar>(R.id.loading_login).visibility = View.GONE
             if (loginResult.error != null) {
-                login.isEnabled = true
+                findViewById<Button>(R.id.login).isEnabled = true
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success == true) {
@@ -67,18 +64,18 @@ class LoginActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK)
         })
 
-        username.afterTextChanged {
+        findViewById<EditText>(R.id.username).afterTextChanged {
             loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
+                findViewById<EditText>(R.id.username).text.toString(),
+                findViewById<EditText>(R.id.password).text.toString()
             )
         }
 
-        password.apply {
+        findViewById<EditText>(R.id.password).apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
+                    findViewById<EditText>(R.id.username).text.toString(),
+                    findViewById<EditText>(R.id.password).text.toString()
                 )
             }
 
@@ -86,16 +83,16 @@ class LoginActivity : AppCompatActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
+                            findViewById<EditText>(R.id.username).text.toString(),
+                            findViewById<EditText>(R.id.password).text.toString()
                         )
                 }
                 false
             }
 
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+            findViewById<Button>(R.id.login).setOnClickListener {
+                findViewById<ProgressBar>(R.id.loading_login).visibility = View.VISIBLE
+                loginViewModel.login(findViewById<EditText>(R.id.username).text.toString(), findViewById<EditText>(R.id.password).text.toString())
             }
         }
     }

@@ -12,7 +12,7 @@ class NewsInfoViewModel(private val newsInfoRepository: NewsInfoRepository): Vie
     private val _documentResult = MutableLiveData<NewsInfoResult>()
     val newsInfoResult: LiveData<NewsInfoResult> = _documentResult
 
-    fun getDocument(id: String, token: String){
+    fun getNewsInfo(id: String, token: String){
         _documentState.value = NewsInfoState(isLoading = true)
         newsInfoRepository.getNewsInfo(id,token, _documentState, _documentResult)
     }
