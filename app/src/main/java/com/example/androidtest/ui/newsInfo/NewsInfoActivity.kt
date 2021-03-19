@@ -25,38 +25,31 @@ class NewsInfoActivity : AppCompatActivity() {
 
         val id = intent.getStringExtra("id").toString()
         val token = intent.getStringExtra("token").toString()
-        val loading = findViewById<ProgressBar>(R.id.loading_news_info)
-        val reload = findViewById<Button>(R.id.reload)
-        val requestFailedMessage = findViewById<TextView>(R.id.request_failed_news_list)
-        val title = findViewById<TextView>(R.id.title_info)
-        val img = findViewById<ImageView>(R.id.img_info)
-        val credito = findViewById<TextView>(R.id.credito_img)
-        val pub = findViewById<TextView>(R.id.data_hora_pub)
-        val origem = findViewById<TextView>(R.id.origem)
-        val corpo = findViewById<WebView>(R.id.corpo_formatado)
 
-        corpo.settings.javaScriptEnabled = true
-        corpo.settings.setSupportZoom(true)
-        corpo.settings.allowContentAccess = true
-        corpo.settings.defaultFontSize = 17
-        corpo.setPadding(5, 0, 5, 0)
+        findViewById<WebView>(R.id.corpo_formatado).apply {
+            settings.javaScriptEnabled = true
+            settings.setSupportZoom(true)
+            settings.allowContentAccess = true
+            settings.defaultFontSize = 17
+            setPadding(5,0,5,0)
+        }
 
         newsInfoViewModel =
             ViewModelProvider(this, NewsInfoViewModelFactory()).get(NewsInfoViewModel::class.java)
 
-        newsInfoViewModel.getDocument(id, token)
+        newsInfoViewModel.getNewsInfo(id, token)
 
         newsInfoViewModel.newsInfoState.observe(this@NewsInfoActivity, Observer {
             val newsInfoState = it ?: return@Observer
 
             //TODO Get News Info
             if (!newsInfoState.isLoading) {
-                loading.visibility = View.GONE
+                findViewById<ProgressBar>(R.id.loading_news_info).visibility = View.GONE
             }
             if (newsInfoState.isLoading) {
-                reload.visibility = View.GONE
-                requestFailedMessage.visibility = View.GONE
-                loading.visibility = View.VISIBLE
+                findViewById<Button>(R.id.reload).visibility = View.GONE
+                findViewById<TextView>(R.id.request_failed_news_list).visibility = View.GONE
+                findViewById<ProgressBar>(R.id.loading_news_info).visibility = View.VISIBLE
             }
         })
 
@@ -65,35 +58,35 @@ class NewsInfoActivity : AppCompatActivity() {
 
             //TODO Get Request of News Info Result
             if (newsInfoResult.failed == true) {
-                reload.visibility = View.VISIBLE
-                requestFailedMessage.visibility = View.VISIBLE
+                findViewById<Button>(R.id.reload).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.request_failed_news_list).visibility = View.VISIBLE
             }
             if (newsInfoResult.success == true) {
-                reload.visibility = View.GONE
-                requestFailedMessage.visibility = View.GONE
+                findViewById<Button>(R.id.reload).visibility = View.GONE
+                findViewById<TextView>(R.id.request_failed_news_list).visibility = View.GONE
                 if (newsInfoResult.newsInfo != null) {
                     val nf = newsInfoResult.newsInfo.newsInfo
-                    title.apply {
+                    findViewById<TextView>(R.id.title_info).apply {
                         visibility = View.VISIBLE
                         text = nf.titulo
                     }
-                    img.apply {
+                    findViewById<ImageView>(R.id.img_info).apply {
                         visibility = View.VISIBLE
                         Picasso.get().load(nf.imagem).into(this)
                     }
-                    credito.apply {
+                    findViewById<TextView>(R.id.credito_img).apply {
                         visibility = View.VISIBLE
                         text = nf.credito
                     }
-                    pub.apply {
+                    findViewById<TextView>(R.id.data_hora_pub).apply {
                         visibility = View.VISIBLE
                         text = (nf.datapub + " " + nf.horapub)
                     }
-                    origem.apply {
+                    findViewById<TextView>(R.id.origem).apply {
                         visibility = View.VISIBLE
                         text = nf.origem
                     }
-                    corpo.apply {
+                    findViewById<WebView>(R.id.corpo_formatado).apply {
                         visibility = View.VISIBLE
                         loadData(
                             ("<html><style>img{width:100%;}p{text-align:justify;}.titulo{font-weight: bold;}</style><body>" +
@@ -106,8 +99,8 @@ class NewsInfoActivity : AppCompatActivity() {
             }
         })
 
-        reload.setOnClickListener {
-            newsInfoViewModel.getDocument(id, token)
+        findViewById<Button>(R.id.reload).setOnClickListener {
+            newsInfoViewModel.getNewsInfo(id, token)
         }
     }
 }
