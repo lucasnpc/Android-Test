@@ -1,122 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:padding="12dp"
-    tools:context=".ui.newsInfo.NewsInfoActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.example.androidtest.ui.newsInfo.NewsInfoViewModel" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="WebViewLayout">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:padding="12dp"
+        tools:context=".ui.newsInfo.NewsInfoActivity">
 
-        <ProgressBar
-            android:id="@+id/loading_news_info"
-            style="@style/Theme.AndroidTest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:indeterminateTint="@color/orange"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute" />
-
-        <TextView
-            android:id="@+id/title_info"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/blue"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="WebViewLayout">
 
-        <ImageView
-            android:id="@+id/img_info"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_info"
-            tools:ignore="ContentDescription,MissingConstraints" />
+            <ProgressBar
+                android:id="@+id/loading_news_info"
+                style="@style/Theme.AndroidTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{ viewModel.newsInfoState.isLoading ? View.VISIBLE : View.GONE }"
+                android:indeterminateTint="@color/orange"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UnusedAttribute" />
 
-        <Button
-            android:id="@+id/reload"
-            android:layout_width="47dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/reload"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/request_failed_news_list" />
+            <TextView
+                android:id="@+id/title_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/blue"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="@{ viewModel.newsInfoResult.success ? View.VISIBLE : View.GONE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
 
-        <TextView
-            android:id="@+id/request_failed_news_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="128dp"
-            android:text="@string/request_failed"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/img_info"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                android:visibility="@{ viewModel.newsInfoResult.success ? View.VISIBLE : View.GONE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_info"
+                tools:ignore="ContentDescription,MissingConstraints" />
 
-        <TextView
-            android:id="@+id/credito_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_info" />
+            <Button
+                android:id="@+id/reload"
+                android:layout_width="47dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/reload"
+                android:visibility="@{ viewModel.newsInfoResult.failed ? View.VISIBLE : View.GONE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/request_failed_news_list" />
 
-        <TextView
-            android:id="@+id/data_hora_pub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/credito_img" />
+            <TextView
+                android:id="@+id/request_failed_news_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="128dp"
+                android:text="@string/request_failed"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:visibility="@{ viewModel.newsInfoResult.failed ? View.VISIBLE : View.GONE }"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/origem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:visibility="gone"
-            app:layout_constraintStart_toEndOf="@+id/data_hora_pub"
-            app:layout_constraintTop_toBottomOf="@+id/credito_img" />
+            <TextView
+                android:id="@+id/credito_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:visibility="@{ viewModel.newsInfoResult.success ? View.VISIBLE : View.GONE }"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_info" />
 
-        <WebView
-            android:id="@+id/corpo_formatado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/origem" />
+            <TextView
+                android:id="@+id/data_hora_pub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:visibility="@{ viewModel.newsInfoResult.success ? View.VISIBLE : View.GONE }"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/credito_img" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/origem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:visibility="@{ viewModel.newsInfoResult.success ? View.VISIBLE : View.GONE }"
+                app:layout_constraintStart_toEndOf="@+id/data_hora_pub"
+                app:layout_constraintTop_toBottomOf="@+id/credito_img" />
 
-</ScrollView>
+            <WebView
+                android:id="@+id/corpo_formatado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="@{ viewModel.newsInfoResult.success ? View.VISIBLE : View.GONE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/origem" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</layout>

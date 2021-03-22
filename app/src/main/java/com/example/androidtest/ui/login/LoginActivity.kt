@@ -12,8 +12,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.databinding.DataBindingUtil
 
 import com.example.androidtest.R
+import com.example.androidtest.databinding.ActivityLoginBinding
 import com.example.androidtest.ui.newsList.NewsListActivity
 
 class LoginActivity : AppCompatActivity() {
@@ -23,12 +25,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_login)
-
-        val login = findViewById<Button>(R.id.login)
-        val user = findViewById<EditText>(R.id.username)
-        val pass = findViewById<EditText>(R.id.password)
-        val loading = findViewById<ProgressBar>(R.id.loading_login)
+        val binding: ActivityLoginBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_login)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
@@ -36,29 +34,28 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
 
-            login.isEnabled = loginState.isDataValid
-            user.isEnabled = true
-            pass.isEnabled = true
+            binding.login.isEnabled = loginState.isDataValid
+            binding.username.isEnabled = true
+            binding.password.isEnabled = true
 
             if (loginState.usernameError != null) {
-                user.error = getString(loginState.usernameError)
+                binding.username.error = getString(loginState.usernameError)
             }
             if (loginState.passwordError != null) {
-                pass.error = getString(loginState.passwordError)
+                binding.password.error = getString(loginState.passwordError)
             }
             if (loginState.isLoading) {
-                user.isEnabled = false
-                pass.isEnabled = false
-                login.isEnabled = false
+                binding.username.isEnabled = false
+                binding.password.isEnabled = false
+                binding.login.isEnabled = false
             }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
+            binding.loadingLogin.visibility = View.GONE
             if (loginResult.error != null) {
-                login.isEnabled = true
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success == true) {
@@ -69,35 +66,37 @@ class LoginActivity : AppCompatActivity() {
 
         findViewById<EditText>(R.id.username).afterTextChanged {
             loginViewModel.loginDataChanged(
-                user.text.toString(),
-                pass.text.toString()
+                binding.username.text.toString(),
+                binding.password.text.toString()
             )
         }
 
         findViewById<EditText>(R.id.password).apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                    user.text.toString(),
-                    pass.text.toString()
+                    binding.username.text.toString(),
+                    binding.password.text.toString()
                 )
             }
 
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
+                    EditorInfo.IME_ACTION_DONE -> {
+                        binding.loadingLogin.visibility = View.VISIBLE
                         loginViewModel.login(
-                            user.text.toString(),
-                            pass.text.toString()
+                            binding.username.text.toString(),
+                            binding.password.text.toString()
                         )
+                    }
                 }
                 false
             }
 
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
+            binding.login.setOnClickListener {
+                binding.loadingLogin.visibility = View.VISIBLE
                 loginViewModel.login(
-                    user.text.toString(),
-                    pass.text.toString()
+                    binding.username.text.toString(),
+                    binding.password.text.toString()
                 )
             }
         }

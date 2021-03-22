@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.androidtest.data.NewsListRepository
-import okhttp3.internal.wait
 
 class NewsListViewModel(private val newsListRepository: NewsListRepository) : ViewModel() {
 
@@ -17,6 +16,7 @@ class NewsListViewModel(private val newsListRepository: NewsListRepository) : Vi
 
     fun getNews(token: String) {
         _newsListState.value = NewsListState(isLoading = true)
+        _newsListResult.value = NewsListResult(failed = false)
         newsListRepository.getNews(token, _newsListResult, _newsListState)
     }
 }
