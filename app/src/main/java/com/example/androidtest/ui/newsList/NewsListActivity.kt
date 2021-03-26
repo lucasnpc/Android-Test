@@ -9,10 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.androidtest.R
 import com.example.androidtest.databinding.ActivityNewsListBinding
 import com.example.androidtest.ui.newsList.adapter.NewsListAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewsListActivity : AppCompatActivity() {
 
-    private lateinit var newsListViewModel: NewsListViewModel
+    private val newsListViewModel: NewsListViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +21,6 @@ class NewsListActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivityNewsListBinding>(this, R.layout.activity_news_list)
 
         val token = intent.getStringExtra("Token").toString()
-
-        newsListViewModel =
-            ViewModelProvider(this, NewsListViewlModelFactory()).get(NewsListViewModel::class.java)
 
         binding.lifecycleOwner = this
         binding.viewModel = newsListViewModel

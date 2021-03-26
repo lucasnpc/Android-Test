@@ -9,10 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.androidtest.R
 import com.example.androidtest.databinding.ActivityNewsInfoBinding
 import com.squareup.picasso.Picasso
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewsInfoActivity : AppCompatActivity() {
 
-    private lateinit var newsInfoViewModel: NewsInfoViewModel
+    private val newsInfoViewModel: NewsInfoViewModel by viewModel()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,9 +22,6 @@ class NewsInfoActivity : AppCompatActivity() {
 
         val id = intent.getStringExtra("id").toString()
         val token = intent.getStringExtra("token").toString()
-
-        newsInfoViewModel =
-            ViewModelProvider(this, NewsInfoViewModelFactory()).get(NewsInfoViewModel::class.java)
 
         binding.lifecycleOwner = this
         binding.viewModel = newsInfoViewModel
